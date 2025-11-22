@@ -1,24 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
+import Home from "./pages/Home";
+import Signup from "./pages/Signup";               // <-- ADD THIS
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    !!localStorage.getItem("token")
+  );
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        {/* LOGIN PAGE */}
+        <Route path="/" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
+
+        {/* SIGNUP PAGE (PUBLIC) */}
+        <Route path="/signup" element={<Signup />} />   {/* <-- ADD THIS */}
+
+        {/* HOME PAGE (PROTECTED) */}
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute>
+              <Home setIsLoggedIn={setIsLoggedIn} />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
